@@ -5,19 +5,19 @@
 #include <stdio.h>
 #include <Adafruit_NeoPixel.h>
 
-/*
- * Analog input for thresholding analog in pin 0
- * button input for reset -> make on Nano D6, "pin 6"
- * 
- */
-
- 
- #define MAX_OUT_CHARS 17  //max nbr of characters to be sent on any one serial command,
-// plus the terminating character sprintf needs to prevent it from overwriting following
-//memory locations, yet still send the complete 16 character string to the LCD
+//Pin Definitions
+int userResetPin = 7;		// pin used for resetting user laser time	(Nano D7)
+int analogPin = 0;			// input voltage connected to analog pin 0 from interface board
+int pixelPin = 6;			// Neopixel data pin 
+//analog input is on pin A0.
+//serial communication for LCD is on pins A4 & A5
 
 
 // Display config
+#define MAX_OUT_CHARS 17  //max nbr of characters to be sent on any one serial command,
+// plus the terminating character sprintf needs to prevent it from overwriting following
+//memory locations, yet still send the complete 16 character string to the LCD
+
 // Setup for the NXP PCF8574A I2C-to-Digital I/O Port
 #define I2C_ADDR    0x27  // Define PCF8574A's I2C Address
 
@@ -28,18 +28,11 @@
 #define LED_ON  1
 #define LED_OFF  0
 
-//Pins for debugging loop timing
-//int TestOutPin = 13;
-//int TestOutPin2 = 8;
-//boolean TestOutToggle2 = true;
-//boolean TestOutToggle = true;
-
 // Instantiate the I2C LCD object
 LiquidCrystal_I2C lcd(I2C_ADDR,lineLen, numLines);
 
 // Initialize neopixels
 int numPixels = 3;
-int pixelPin = 6;
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(numPixels, pixelPin, NEO_GRB + NEO_KHZ800);
 int errorLED = 2;
 int laserOnLED = 1;
@@ -54,17 +47,15 @@ const unsigned long second = 1000;
 const unsigned long minute = 60000;		// number of millis in a minute
 const unsigned long hour = 3600000;		// number of millis in an hour
 
-
-//Pin Definitions
-int userResetPin = 7;		// pin used for resetting user laser time	(Nano D7)
-int analogPin = 0;			// vinput oltsge connected to analog pin 0 from interface board
-int analogVal = 0;			// variable to store the value read
-
 // Kept threshold values from DMS timer but swapped the logic in loop()
-// because our laser is active low
+// because our laser uses active low instead of active high
+int analogVal = 0;			// variable to store the analog value read
 int anaLowThreshold = 300;	 // if analog goes above this value its considered ON
 int anaHighThreshold = 324;	// if analog value goes below this value its considered OFF
 int cursorPos = 0;
+//Delay after seeing laser is on
+int minLaserTime = 500; //effectively the shortest time the laser can be recorded as being active.
+
 unsigned long millisOnLast = 0;
 unsigned long millisOffLast = 0;
 unsigned long millisTemp = 0;
@@ -78,7 +69,7 @@ int tubeHours = 0;
 int tubeMinutes = 0;				// number of minutes tube has been used (not resettable)
 int tubeSeconds = 0;
 unsigned long tubeMillis = 0;				
-unsigned long lastWriteToEEPROMMillis = 0;	 // number of millis that the EEPROM was laser written to
+unsigned long lastWriteToEEPROMMillis = 0;	 // number of millis that the EEPROM was last written to
 
 char   buffer[MAX_OUT_CHARS];  //buffer used to format a line (+1 is for trailing 0)
 char   buffer2[MAX_OUT_CHARS];  //buffer used to format a line (+1 is for trailing 0)
@@ -88,6 +79,12 @@ float costPerMin = 0.20;
 
 const unsigned int ThisCurrentVersion = 4;	// version number for this program.	simply counting releases
 // did not increment version when forking for I2C LCD
+
+//Pins for debugging loop timing
+//int TestOutPin = 13;
+//int TestOutPin2 = 8;
+//boolean TestOutToggle2 = true;
+//boolean TestOutToggle = true;
 
 // Arduino EEPROM good for ~ 100,000 writes
 // Arduino EEPROM good for ~ 100,000 writes
@@ -108,17 +105,16 @@ void setup() {
 	//pinMode(TestOutPin2, OUTPUT);
 	EEPROM_readAnything(addr,laserTime);
 	Serial.begin(115200);
-	//int addr = 0;
 	tubeMillis = laserTime.seconds*1000;
 	userMillis = laserTime.uSeconds*1000;
 		// Initialize the version number in EEPROM if this is the first load after a reflash
-	if ( laserTime.thisVersion == 0 ) {
+	if ( laserTime.thisVersion == 0 )
+	{
 		laserTime.thisVersion = ThisCurrentVersion;
 		laserTime.EEPROMwriteCount = laserTime.EEPROMwriteCount + 1;
 		EEPROM_writeAnything(0, laserTime);
 		//addr = ROUND_ROBIN_EEPROM_write(laserTime);
 	}
-		
 		
 	// Briefly show Arduino status
 	sprintf(buffer, "Version: %02d", laserTime.thisVersion);
@@ -150,15 +146,6 @@ void setup() {
 
 	delay(2000);	// cheap debouncing trick	
 
-	
-	// Initialize the LCD 
-//	lcd.begin(16, 2);
-//	lcd.setCursor(0,0);
-//	lcd.println("User		00:00:00");
-//	lcd.setCursor(0,1);
-//	lcd.print	("Tube 00000:00:00");
-
-	
 	Serial.print("Values stored in EEPROM address ");
 	Serial.println(addr);
 
@@ -198,15 +185,6 @@ void loop() {
 	TestOutToggle2 = !TestOutToggle2;*/
 	// do a tight loop on checking the laser and keeping track of on/off times	
 	for (int i=0; i <= 100; i++) {
-		//debug output to test loop timing
-			/*if ( TestOutToggle ) {
-			// nominally keep disabled, since Nano D13 annoyingly toggles an LED
-				digitalWrite(TestOutPin, HIGH);
-			}
-			else {
-				digitalWrite(TestOutPin, LOW);
-			}
-		TestOutToggle = !TestOutToggle;*/
 		//reset the error led
 		pixels.setPixelColor(errorLED, off);
 		// read the input pin
@@ -219,6 +197,7 @@ void loop() {
 			millisDiff = millisOnLast - millisOffLast;
 			// set laser LED on
 			pixels.setPixelColor(laserOnLED, red);
+			delay(minLaserTime);
 		}
 			// laser has been on here, continuing on
 		else if ((analogVal <	anaLowThreshold) && lastLaserOn) {
@@ -226,7 +205,8 @@ void loop() {
 
 			millisTemp = (unsigned long) millis();
 			millisDiff = millisTemp-millisOnLast;
-			millisOnLast = millisTemp;			
+			millisOnLast = millisTemp;
+			delay(minLaserTime);
 		}
 			// laser has been on, turning off
 		else if ((analogVal > anaHighThreshold) && lastLaserOn) {
@@ -256,7 +236,6 @@ void loop() {
 				laserTime.EEPROMwriteCount = laserTime.EEPROMwriteCount + 1;
 				laserTime.thisVersion = ThisCurrentVersion;
 				//int addr = ROUND_ROBIN_EEPROM_write(laserTime);
-				//int addr = 0;
 				EEPROM_writeAnything(0, laserTime);
 
 				lastWriteToEEPROMMillis = millis();
@@ -332,7 +311,6 @@ void loop() {
 		// to reduce the number of writes to EEPROM, since any one location is only good for ~ 100,000 writes
 	EEPROM_readAnything(addr, laserTime);
 	//int addr = ROUND_ROBIN_EEPROM_read(laserTime);
-	//int addr = 0;
 	unsigned long laserSeconds = laserTime.seconds;
 	
 		// note - it appears that only one of the following If statements is required	
@@ -347,7 +325,6 @@ void loop() {
 		laserTime.thisVersion = ThisCurrentVersion;
 		EEPROM_writeAnything(0, laserTime);
 		//addr = ROUND_ROBIN_EEPROM_write(laserTime);
-		//int addr = 0;
 		lastWriteToEEPROMMillis = millis();
 		Serial.println("Wrote to EEPROM - tube has another 5 minutes of use");
 		
@@ -366,14 +343,13 @@ void loop() {
 		Serial.print("	laserTime.thisVersion: ");
 		Serial.println(laserTime.thisVersion);
 	 }	
-	if ((millis() > (lastWriteToEEPROMMillis+300000)) && ((laserSeconds+1)*1000 < tubeMillis)) {
+/* 	if ((millis() > (lastWriteToEEPROMMillis+300000)) && ((laserSeconds+1)*1000 < tubeMillis)) {
 		// ie. if it has been 5 mins since last write and the value has changed, write now
 		laserTime.seconds = tubeMillis/1000;
 		laserTime.uSeconds = userMillis/1000;
 		laserTime.EEPROMwriteCount = laserTime.EEPROMwriteCount + 1;
 		laserTime.thisVersion = ThisCurrentVersion;
 		//addr = ROUND_ROBIN_EEPROM_write(laserTime);
-		//int addr = 0;
 		lastWriteToEEPROMMillis = millis();
 		Serial.println("Wrote to EEPROM - value has changed in last 5 minutes");
 
@@ -391,7 +367,7 @@ void loop() {
 
 		Serial.print("	laserTime.thisVersion: ");
 		Serial.println(laserTime.thisVersion);
-	}
+	} */
 		
 	//Print user and tube times to screen
 	lcd.setCursor(0,0);
