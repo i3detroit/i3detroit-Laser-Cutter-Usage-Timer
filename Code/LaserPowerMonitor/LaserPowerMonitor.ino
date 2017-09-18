@@ -113,6 +113,9 @@ void setup() {
 		laserTime.thisVersion = ThisCurrentVersion;
 		laserTime.EEPROMwriteCount = laserTime.EEPROMwriteCount + 1;
 		EEPROM_writeAnything(0, laserTime);
+		// replace with Xerial.write()
+		Serial.println(laserTime.seconds);
+		
 		//addr = ROUND_ROBIN_EEPROM_write(laserTime);
 	}
 		
@@ -146,7 +149,7 @@ void setup() {
 
 	delay(2000);	// cheap debouncing trick	
 
-	Serial.print("Values stored in EEPROM address ");
+	/* Serial.print("Values stored in EEPROM address ");
 	Serial.println(addr);
 
 
@@ -163,7 +166,7 @@ void setup() {
 	Serial.println(laserTime.thisVersion);
 
 	Serial.println("setup Complete");
-	Serial.println("");
+	Serial.println(""); */
 	
 		//turn off the pixels
 	pixels.setPixelColor(errorLED, off);
@@ -237,10 +240,12 @@ void loop() {
 				laserTime.thisVersion = ThisCurrentVersion;
 				//int addr = ROUND_ROBIN_EEPROM_write(laserTime);
 				EEPROM_writeAnything(0, laserTime);
-
 				lastWriteToEEPROMMillis = millis();
 				
-				Serial.println("User hit reset & Wrote to EEPROM");
+				// replace with Xerial.write()
+				Serial.println(laserTime.seconds);
+				
+				/* Serial.println("User hit reset & Wrote to EEPROM");
 
 				Serial.print("	EEPROM address: ");
 				Serial.println(addr);
@@ -255,7 +260,7 @@ void loop() {
 				Serial.println(laserTime.EEPROMwriteCount);
 			
 				Serial.print("	laserTime.thisVersion: ");
-				Serial.println(laserTime.thisVersion);
+				Serial.println(laserTime.thisVersion); */
 			}
 				// display laser cost on screen for 5 sec
 				//Create screen output
@@ -315,10 +320,10 @@ void loop() {
 	
 		// note - it appears that only one of the following If statements is required	
 	if ((laserSeconds+300) < (tubeMillis/1000)) {	
-		Serial.print("LaserSeconds:");
+		/* Serial.print("LaserSeconds:");
 		Serial.print(laserSeconds);
 		Serial.print("adjTubeSecs:");
-		Serial.println(((tubeMillis/1000)+300));
+		Serial.println(((tubeMillis/1000)+300)); */
 		laserTime.seconds = tubeMillis/1000;
 		laserTime.uSeconds = userMillis/1000;
 		laserTime.EEPROMwriteCount = laserTime.EEPROMwriteCount + 1;
@@ -326,7 +331,11 @@ void loop() {
 		EEPROM_writeAnything(0, laserTime);
 		//addr = ROUND_ROBIN_EEPROM_write(laserTime);
 		lastWriteToEEPROMMillis = millis();
-		Serial.println("Wrote to EEPROM - tube has another 5 minutes of use");
+		
+		// replace with Xerial.write()
+		Serial.println(laserTime.seconds);
+		
+		/* Serial.println("Wrote to EEPROM - tube has another 5 minutes of use");
 		
 		Serial.print("	EEPROM address: ");
 		Serial.println(addr);
@@ -341,7 +350,7 @@ void loop() {
 		Serial.println(laserTime.EEPROMwriteCount);
 		 
 		Serial.print("	laserTime.thisVersion: ");
-		Serial.println(laserTime.thisVersion);
+		Serial.println(laserTime.thisVersion); */
 	 }	
 /* 	if ((millis() > (lastWriteToEEPROMMillis+300000)) && ((laserSeconds+1)*1000 < tubeMillis)) {
 		// ie. if it has been 5 mins since last write and the value has changed, write now
