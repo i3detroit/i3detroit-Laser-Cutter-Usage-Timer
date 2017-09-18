@@ -18,8 +18,8 @@ int pixelPin = 6;			// Neopixel data pin
 // plus the terminating character sprintf needs to prevent it from overwriting following
 //memory locations, yet still send the complete 16 character string to the LCD
 
-// Setup for the NXP PCF8574A I2C-to-Digital I/O Port
-#define I2C_ADDR    0x27  // Define PCF8574A's I2C Address
+// Setup for the I2C-to-Digital I/O Port
+#define I2C_ADDR    0x27  // Define I2C Address
 
 // Parameters to define the size of the LCD array
 #define lineLen 16
@@ -87,7 +87,6 @@ const unsigned int ThisCurrentVersion = 4;	// version number for this program.	s
 //boolean TestOutToggle = true;
 
 // Arduino EEPROM good for ~ 100,000 writes
-// Arduino EEPROM good for ~ 100,000 writes
 // only lasts ~ 1 year if write every 5 min, 24 x 7
 // and have ~ 12 people hitting reset every day
 struct config_t
@@ -149,24 +148,9 @@ void setup() {
 
 	delay(2000);	// cheap debouncing trick	
 
-	/* Serial.print("Values stored in EEPROM address ");
-	Serial.println(addr);
-
-
-	Serial.print("	laserTime.seconds ie tube: ");
-	Serial.println(laserTime.seconds);
-	
-	Serial.print("	laserTime.uSeconds ie user: ");
-	Serial.println(laserTime.uSeconds);
-	
-	Serial.print("	laserTime.EEPROMwriteCount: ");
-	Serial.println(laserTime.EEPROMwriteCount);
-
-	Serial.print("	laserTime.thisVersion: ");
-	Serial.println(laserTime.thisVersion);
-
+	printStatsSerial(addr, laserTime.seconds, laserTime.uSeconds, laserTime.EEPROMwriteCount, laserTime.thisVersion);
 	Serial.println("setup Complete");
-	Serial.println(""); */
+	Serial.println("");
 	
 		//turn off the pixels
 	pixels.setPixelColor(errorLED, off);
@@ -200,7 +184,7 @@ void loop() {
 			millisDiff = millisOnLast - millisOffLast;
 			// set laser LED on
 			pixels.setPixelColor(laserOnLED, red);
-			delay(minLaserTime);
+			//delay(minLaserTime);
 		}
 			// laser has been on here, continuing on
 		else if ((analogVal <	anaLowThreshold) && lastLaserOn) {
@@ -209,7 +193,7 @@ void loop() {
 			millisTemp = (unsigned long) millis();
 			millisDiff = millisTemp-millisOnLast;
 			millisOnLast = millisTemp;
-			delay(minLaserTime);
+			//delay(minLaserTime);
 		}
 			// laser has been on, turning off
 		else if ((analogVal > anaHighThreshold) && lastLaserOn) {
@@ -242,25 +226,12 @@ void loop() {
 				EEPROM_writeAnything(0, laserTime);
 				lastWriteToEEPROMMillis = millis();
 				
-				// replace with Xerial.write()
+				// replace with Serial.write()
 				Serial.println(laserTime.seconds);
 				
-				/* Serial.println("User hit reset & Wrote to EEPROM");
-
-				Serial.print("	EEPROM address: ");
-				Serial.println(addr);
-
-				Serial.print("	laserTime.seconds ie tube: ");
-				Serial.println(laserTime.seconds);
-
-				Serial.print("	laserTime.uSeconds ie user: ");
-				Serial.println(laserTime.uSeconds);
-		
-				Serial.print("	laserTime.EEPROMwriteCount: ");
-				Serial.println(laserTime.EEPROMwriteCount);
-			
-				Serial.print("	laserTime.thisVersion: ");
-				Serial.println(laserTime.thisVersion); */
+				Serial.println("User hit reset & Wrote to EEPROM");
+				printStatsSerial(addr, laserTime.seconds, laserTime.uSeconds, laserTime.EEPROMwriteCount, laserTime.thisVersion);
+				
 			}
 				// display laser cost on screen for 5 sec
 				//Create screen output
@@ -312,13 +283,12 @@ void loop() {
 	//sprintf(buffer, "%12d", userMillis); //show raw milliseconds for debugging
 	sprintf(buffer2, "Tube %05d:%02d:%02d", tubeHours,  tubeMinutes, tubeSeconds);
 	
-		// Only write to EEPROM if the current value is more than 5 minutes from the previous EEPROM value
-		// to reduce the number of writes to EEPROM, since any one location is only good for ~ 100,000 writes
+	// Only write to EEPROM if the current value is more than 5 minutes from the previous EEPROM value
+	// to reduce the number of writes to EEPROM, since any one location is only good for ~ 100,000 writes
 	EEPROM_readAnything(addr, laserTime);
 	//int addr = ROUND_ROBIN_EEPROM_read(laserTime);
 	unsigned long laserSeconds = laserTime.seconds;
-	
-		// note - it appears that only one of the following If statements is required	
+		
 	if ((laserSeconds+300) < (tubeMillis/1000)) {	
 		/* Serial.print("LaserSeconds:");
 		Serial.print(laserSeconds);
@@ -335,48 +305,10 @@ void loop() {
 		// replace with Xerial.write()
 		Serial.println(laserTime.seconds);
 		
-		/* Serial.println("Wrote to EEPROM - tube has another 5 minutes of use");
+		//Serial.println("Wrote to EEPROM - tube has another 5 minutes of use");
+		printStatsSerial(addr, laserTime.seconds, laserTime.uSeconds, laserTime.EEPROMwriteCount, laserTime.thisVersion);
 		
-		Serial.print("	EEPROM address: ");
-		Serial.println(addr);
-
-		Serial.print("	laserTime.seconds ie tube: ");
-		Serial.println(laserTime.seconds);
-		
-		Serial.print("	laserTime.uSeconds ie user: ");
-		Serial.println(laserTime.uSeconds);
-		
-		Serial.print("	laserTime.EEPROMwriteCount: ");
-		Serial.println(laserTime.EEPROMwriteCount);
-		 
-		Serial.print("	laserTime.thisVersion: ");
-		Serial.println(laserTime.thisVersion); */
 	 }	
-/* 	if ((millis() > (lastWriteToEEPROMMillis+300000)) && ((laserSeconds+1)*1000 < tubeMillis)) {
-		// ie. if it has been 5 mins since last write and the value has changed, write now
-		laserTime.seconds = tubeMillis/1000;
-		laserTime.uSeconds = userMillis/1000;
-		laserTime.EEPROMwriteCount = laserTime.EEPROMwriteCount + 1;
-		laserTime.thisVersion = ThisCurrentVersion;
-		//addr = ROUND_ROBIN_EEPROM_write(laserTime);
-		lastWriteToEEPROMMillis = millis();
-		Serial.println("Wrote to EEPROM - value has changed in last 5 minutes");
-
-		Serial.print("	EEPROM address: ");
-		Serial.println(addr);
-
-		Serial.print("	laserTime.seconds ie tube: ");
-		Serial.println(laserTime.seconds);
-		
-		Serial.print("	laserTime.uSeconds ie user: ");
-		Serial.println(laserTime.uSeconds);
-		
-		Serial.print("	laserTime.EEPROMwriteCount: ");
-		Serial.println(laserTime.EEPROMwriteCount);
-
-		Serial.print("	laserTime.thisVersion: ");
-		Serial.println(laserTime.thisVersion);
-	} */
 		
 	//Print user and tube times to screen
 	lcd.setCursor(0,0);
@@ -386,3 +318,19 @@ void loop() {
 	lcd.print(buffer2);
 }
 
+void printStatsSerial(int address, unsigned long laserSeconds, unsigned long userSeconds, unsigned long writeCount, unsigned int version){
+	Serial.print("	EEPROM address: ");
+	Serial.println(address);
+
+	Serial.print("	laserTime.seconds ie tube: ");
+	Serial.println(laserSeconds);
+	
+	Serial.print("	laserTime.uSeconds ie user: ");
+	Serial.println(userSeconds);
+	
+	Serial.print("	laserTime.EEPROMwriteCount: ");
+	Serial.println(writeCount);
+	 
+	Serial.print("	laserTime.thisVersion: ");
+	Serial.println(version);
+}
