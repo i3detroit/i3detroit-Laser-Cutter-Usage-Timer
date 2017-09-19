@@ -112,9 +112,6 @@ void setup() {
 		laserTime.thisVersion = ThisCurrentVersion;
 		laserTime.EEPROMwriteCount = laserTime.EEPROMwriteCount + 1;
 		EEPROM_writeAnything(0, laserTime);
-		// replace with Xerial.write()
-		Serial.println(laserTime.seconds);
-		
 		//addr = ROUND_ROBIN_EEPROM_write(laserTime);
 	}
 		
@@ -148,9 +145,9 @@ void setup() {
 
 	delay(2000);	// cheap debouncing trick	
 
-	printStatsSerial(addr, laserTime.seconds, laserTime.uSeconds, laserTime.EEPROMwriteCount, laserTime.thisVersion);
-	Serial.println("setup Complete");
-	Serial.println("");
+	//printStatsSerial(addr, laserTime.seconds, laserTime.uSeconds, laserTime.EEPROMwriteCount, laserTime.thisVersion);
+	//Serial.println("setup Complete");
+	//Serial.println("");
 	
 		//turn off the pixels
 	pixels.setPixelColor(errorLED, off);
@@ -226,11 +223,10 @@ void loop() {
 				EEPROM_writeAnything(0, laserTime);
 				lastWriteToEEPROMMillis = millis();
 				
-				// replace with Serial.write()
 				Serial.println(laserTime.seconds);
 				
-				Serial.println("User hit reset & Wrote to EEPROM");
-				printStatsSerial(addr, laserTime.seconds, laserTime.uSeconds, laserTime.EEPROMwriteCount, laserTime.thisVersion);
+				//Serial.println("User hit reset & Wrote to EEPROM");
+				//printStatsSerial(addr, laserTime.seconds, laserTime.uSeconds, laserTime.EEPROMwriteCount, laserTime.thisVersion);
 				
 			}
 				// display laser cost on screen for 5 sec
@@ -302,11 +298,10 @@ void loop() {
 		//addr = ROUND_ROBIN_EEPROM_write(laserTime);
 		lastWriteToEEPROMMillis = millis();
 		
-		// replace with Xerial.write()
 		Serial.println(laserTime.seconds);
 		
 		//Serial.println("Wrote to EEPROM - tube has another 5 minutes of use");
-		printStatsSerial(addr, laserTime.seconds, laserTime.uSeconds, laserTime.EEPROMwriteCount, laserTime.thisVersion);
+		//printStatsSerial(addr, laserTime.seconds, laserTime.uSeconds, laserTime.EEPROMwriteCount, laserTime.thisVersion);
 		
 	 }	
 		
