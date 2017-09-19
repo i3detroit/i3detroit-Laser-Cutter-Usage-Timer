@@ -93,7 +93,7 @@ void loop() {
     if (userReset == LOW) {
 
 		Serial.println("Before Zeroing EEPROM");
-		int addr = ROUND_ROBIN_EEPROM_read(laserTime);
+		int addr = 0;
   
         Serial.print("   Round Robin EEPROM address: ");
         Serial.println(addr);
@@ -119,17 +119,17 @@ void loop() {
 		laserTime.uSeconds = 0;
 		laserTime.EEPROMwriteCount = laserTime.EEPROMwriteCount + 1;
 		laserTime.thisVersion = 0;
-		ROUND_ROBIN_EEPROM_write(laserTime);
+		EEPROM_writeAnything(0, laserTime);
 
 
 
 		Serial.println("After Zeroing EEPROM");
-		addr = ROUND_ROBIN_EEPROM_read(laserTime);
+		//addr = ROUND_ROBIN_EEPROM_read(laserTime);
 
         Serial.print("   Round Robin EEPROM address: ");
 		Serial.println(addr);
 
-		ROUND_ROBIN_EEPROM_read(laserTime);
+		EEPROM_readAnything(addr,laserTime);
   
 		Serial.print("   laserTime.seconds ie tube: ");
 		Serial.println(laserTime.seconds);
