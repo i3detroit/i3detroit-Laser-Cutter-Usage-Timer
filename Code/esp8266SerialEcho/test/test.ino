@@ -1,59 +1,16 @@
-/*
- * Based on https://github.com/i3detroit/mqtt-wrapper/commit/753bf3e4c900d1b0f58bdae45f233a4cac133e14#diff-722036d88083221fb60ee22839fe48f1
- *
- */
-#include "mqtt-wrapper.h"
+// Serial communication test code to run on a plain arduino, without all the extra ESP8266 and MQTT stuff from the actual program
 
-const char* host_name = "bumblebee_timer";
-const char* ssid = "i3detroit-wpa";
-const char* password = "i3detroit";
-const char* mqtt_server = "10.13.0.22";
-const int mqtt_port = 1883;
-
-char buf[1024];
 const int bufferSize = 500;
 char timerInputBuffer[bufferSize];
 char outputBuffer[bufferSize];
-int i = 0;
 int j = 0;
+
 bool isTime = 0;
 bool isWriteCount = 0;
 bool isOnline = 0;
 String tubeTime;
 String writeCount;
 
-void callback(char* topic, byte* payload, unsigned int length, PubSubClient *client) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
-}
-void connectSuccess(PubSubClient* client, char* ip) {
-  Serial.println("win");
-  //subscribe and shit here
-  sprintf(buf, "{\"Hostname\":\"%s\", \"IPaddress\":\"%s\"}", host_name, ip);
-  client->publish("tele/i3/laserZone/bumblebee_timer/INFO2", buf);
-}
-void setup() {
-  Serial.begin(115200);
-  setup_mqtt(connectedLoop, callback, connectSuccess, ssid, password, mqtt_server, mqtt_port, host_name);
-}
-// Do the mqtt stuff:
-void connectedLoop(PubSubClient* client) {
-  if (isTime == 1){
-    client->publish("stat/i3/laserZone/bumblebee_timer/laserTubeTime", outputBuffer);
-  }
-  if (isWriteCount == 1){
-    client->publish("stat/i3/laserZone/bumblebee_timer/EEPROMwriteCount", outputBuffer);
-  }
-    if (isOnline == 1){
-    client->publish("stat/i3/laserZone/bumblebee_timer/status", "Laser_Timer_Online");
-  }
-
-}
 bool isNumeric(String str, int index) {
   for (byte i = index; i < str.length(); i++) {
     if(!isDigit(str.charAt(i))) {
@@ -63,10 +20,12 @@ bool isNumeric(String str, int index) {
   return true;
 }
 
+void setup() {
+  Serial.begin(115200);
+  Serial.print("Test Unit Online\n");
+}
+
 void loop() {
-  // Watch serial for various values sent from timer
-  // Serial read code borrowed from http://robotic-controls.com/learn/arduino/arduino-arduino-serial-communication
-  
   j = 0;
   String timerInput;
   
@@ -88,8 +47,7 @@ void loop() {
     isTime = 0;
     isWriteCount = 0;
     isOnline = 0;
-    timerInput.trim(); // get rid of tailing carriage return that mucks up isNumeric()
-    // Logical checks for trigger characters
+    timerInput.trim();
     if (timerInput.charAt(0) == '&') {
       if (isNumeric(timerInput,1) && timerInput.length() > 1) {
         isTime = 1;
@@ -116,7 +74,5 @@ void loop() {
       Serial.print("Laser timer online\n");
     }
     else Serial.print("(other) Input not recognized\n");
-  }
-  // send mqtt stuff
-  loop_mqtt();
+  } 
 }
