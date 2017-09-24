@@ -11,14 +11,16 @@ const char* mqtt_server = "10.13.0.22";
 const int mqtt_port = 1883;
 
 char buf[1024];
-char timerInputBuffer[20];
-char outputBuffer[20];
+const int bufferSize = 500;
+char timerInputBuffer[bufferSize];
+char outputBuffer[bufferSize];
 int i = 0;
 int j = 0;
 bool isTime = 0;
-bool isOther = 0;
+bool isWriteCount = 0;
+bool isOnline = 0;
 String tubeTime;
-String other;
+String writeCount;
 
 void callback(char* topic, byte* payload, unsigned int length, PubSubClient *client) {
   Serial.print("Message arrived [");
@@ -44,8 +46,11 @@ void connectedLoop(PubSubClient* client) {
   if (isTime == 1){
     client->publish("stat/i3/laserZone/bumblebee_timer/laserTubeTime", outputBuffer);
   }
-  if (isOther == 1){
-    client->publish("stat/i3/laserZone/bumblebee_timer/status", outputBuffer);
+  if (isWriteCount == 1){
+    client->publish("stat/i3/laserZone/bumblebee_timer/EEPROMwriteCount", outputBuffer);
+  }
+    if (isOnline == 1){
+    client->publish("stat/i3/laserZone/bumblebee_timer/status", "Laser_Timer_Online");
   }
 
 }
@@ -59,48 +64,59 @@ bool isNumeric(String str, int index) {
 }
 
 void loop() {
-  // Watch serial for values sent from timer
-  // Code borrowed and modified from http://robotic-controls.com/learn/arduino/arduino-arduino-serial-communication
+  // Watch serial for various values sent from timer
+  // Serial read code borrowed from http://robotic-controls.com/learn/arduino/arduino-arduino-serial-communication
   
   j = 0;
   String timerInput;
   
   if (Serial.available()){
     delay(100);
-    while(Serial.available() && j < 50) {
+    while(Serial.available() && j < bufferSize) {
       timerInputBuffer[j++] = Serial.read();
     }
     timerInputBuffer[j++] = '\0';
     timerInput = String(timerInputBuffer);
-    
-    //Serial.println(timerInput);
+    /*for (byte j = 0; j<timerInput.length(); j++) {
+      Serial.print("\nCharacter\n");
+      Serial.println(timerInput.charAt(j)); 
+      Serial.print("\nValue\n");
+      Serial.print(timerInput.charAt(j));
+    }*/
+    Serial.println(timerInput);
     
     isTime = 0;
-    isOther = 0;
-    
+    isWriteCount = 0;
+    isOnline = 0;
+    timerInput.trim(); // get rid of tailing carriage return that mucks up isNumeric()
+    // Logical checks for trigger characters
     if (timerInput.charAt(0) == '&') {
-      if (isNumeric(timerInput,1)) {
+      if (isNumeric(timerInput,1) && timerInput.length() > 1) {
         isTime = 1;
         tubeTime = timerInput.substring(1);
-        tubeTime.toCharArray(outputBuffer,20);
+        tubeTime.toCharArray(outputBuffer,bufferSize);
         Serial.print("Time: ");
         Serial.println(tubeTime);
       }
-      else Serial.print("Input not recognized\n");
+      else Serial.print("(&) Input not recognized\n");
     }
     else if (timerInput.charAt(0) == '^') {
       // substitute a different logical test below for other data
-      //if (isNumeric(timerInput,1)) {
-        isOther = 1;
-        other = timerInput.substring(1);
-        other.toCharArray(outputBuffer,20);
+      if (isNumeric(timerInput,1) && timerInput.length() > 1) {
+        isWriteCount = 1;
+        writeCount = timerInput.substring(1);
+        writeCount.toCharArray(outputBuffer,bufferSize);
         Serial.print("Other: ");
-        Serial.println(other);
-      //}
-      //else Serial.print("Input not recognized\n");
+        Serial.println(writeCount);
+      }
+      else Serial.print("(^) Input not recognized\n");
     }
-    else Serial.print("Input not recognized\n");
+    else if (timerInput.charAt(0) == '#') {
+      isOnline = 1;
+      Serial.print("Laser timer online\n");
+    }
+    else Serial.print("(other) Input not recognized\n");
   }
-  
+  // send mqtt stuff
   loop_mqtt();
 }
