@@ -40,6 +40,7 @@ void connectSuccess(PubSubClient* client, char* ip) {
 void setup() {
   Serial.begin(115200);
   setup_mqtt(connectedLoop, callback, connectSuccess, ssid, password, mqtt_server, mqtt_port, host_name);
+  isOnline = 1;
 }
 // Do the mqtt stuff:
 void connectedLoop(PubSubClient* client) {
@@ -52,7 +53,9 @@ void connectedLoop(PubSubClient* client) {
     if (isOnline == 1){
     client->publish("stat/i3/laserZone/bumblebee_timer/status", "Laser_Timer_Online");
   }
-
+  isTime = 0;
+  isWriteCount = 0;
+  isOnline = 0;
 }
 bool isNumeric(String str, int index) {
   for (byte i = index; i < str.length(); i++) {
@@ -68,7 +71,7 @@ void loop() {
   // Serial read code borrowed from http://robotic-controls.com/learn/arduino/arduino-arduino-serial-communication
   
   j = 0;
-  String timerInput;
+  String timerInput = "\0";
   
   if (Serial.available()){
     delay(100);
@@ -84,10 +87,10 @@ void loop() {
       Serial.print(timerInput.charAt(j));
     }*/
     Serial.println(timerInput);
-    
-    isTime = 0;
-    isWriteCount = 0;
-    isOnline = 0;
+    //resetting these here doesn't seem to work right - does loop_mqtt() call connectedLoop() more than once?
+    //isTime = 0;
+    //isWriteCount = 0;
+    //isOnline = 0;
     timerInput.trim(); // get rid of tailing carriage return that mucks up isNumeric()
     // Logical checks for trigger characters
     if (timerInput.charAt(0) == '&') {
