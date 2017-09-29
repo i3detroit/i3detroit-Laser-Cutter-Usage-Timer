@@ -3,3 +3,4 @@
 Code/esp8266SerialEcho/esp8266SerialEcho_ESP8266_ESP12_esp8266.bin
 Code/esp8266SerialEcho/test/test_AVR_NANO_atmega328p.hex
 Code/LaserPowerMonitor/LaserPowerMonitor_AVR_NANO_atmega328p.hex
+Code/laser-status-lights/laser-status-lights_ESP8266_ESP12_esp8266.bin
