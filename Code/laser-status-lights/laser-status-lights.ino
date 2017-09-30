@@ -5,12 +5,11 @@
 #include "mqtt-wrapper.h"
 
 #define PIXELPIN              5  //D1
-#define SHOPAIRVALVEPIN       4  //D2
-#define EXHAUSTGATEPIN        0  //D3 
+#define SHOPAIRVALVEPIN       4  //D2 //skip d3
+#define EXHAUSTGATEPIN        12  //D6
 #define EXHAUSTFANPIN         -1 //sensed via mqtt, no real pin
 #define SHOPAIRCOMPRESSORPIN  14 //D5 - skip D4 since it's TX1
 #define READYPIN              -1 //virtual item, no pin
-
 
 #define NUMPIXELS   12
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIXELPIN, NEO_GRB + NEO_KHZ800);
@@ -27,28 +26,32 @@ int j = 0;
 // Define the components that are being monitored
 // component {PIN, OffLED, OnLED, State}
 // State 0 = on, 1 = off
+
 component ExhaustGate = {EXHAUSTGATEPIN, 0, 1, 1};
 component ExhaustFan = {EXHAUSTFANPIN, 2, 3, 1};
 component ShopAirValve = {SHOPAIRVALVEPIN, 4, 5, 1};
 component ShopAirCompressor = {SHOPAIRCOMPRESSORPIN, 6, 7, 1};
-component componentList[] = {ShopAirValve, ShopAirCompressor, ExhaustGate, ExhaustFan};
-int componentListLen = 4;
-int readyChecksum = 0;
+
+//List of components with physical switches
+component componentList[] = {ShopAirValve, ShopAirCompressor, ExhaustGate};
+component Ready = {READYPIN, 8, 9, 0};
+int componentListLen = 3;
+
 // Ready light when all components are ready
-component Ready = {READYPIN, 8, 9, 1};
+
 
 char buf[1024];
+int i = 0;
 const int bufferSize = 500;
 char timerInputBuffer[bufferSize];
 char outputBuffer[bufferSize];
-int i = 0;
 int k = 0;
 bool isTime = 0;
 bool isWriteCount = 0;
 bool isOnline = 0;
 String tubeTime;
 String writeCount;
-const char* host_name = "bumblebee_timer";
+const char* host_name = "bumblebee_status_lights";
 const char* ssid = "i3detroit-wpa";
 const char* password = "i3detroit";
 const char* mqtt_server = "10.13.0.22";
@@ -78,7 +81,7 @@ void connectSuccess(PubSubClient* client, char* ip) {
   Serial.println("win");
   //subscribe and shit here
   sprintf(buf, "{\"Hostname\":\"%s\", \"IPaddress\":\"%s\"}", host_name, ip);
-  client->publish("tele/i3/laserZone/bumblebee_timer/INFO2", buf);
+  client->publish("tele/i3/laserZone/bumblebee_status_lights/INFO2", buf);
   client->subscribe("stat/i3/laserZone/ventFan/POWER");
   client->publish("cmnd/i3/laserZone/ventFan/POWER", "");
 }
@@ -86,7 +89,6 @@ void setup() {
   //start serial connection
   Serial.begin(115200);
   setup_mqtt(connectedLoop, callback, connectSuccess, ssid, password, mqtt_server, mqtt_port, host_name);
-  isOnline = 1;
 
   pinMode(ShopAirValve.Pin, INPUT_PULLUP);
   pinMode(ExhaustGate.Pin, INPUT_PULLUP);
@@ -94,19 +96,19 @@ void setup() {
   pinMode(ShopAirCompressor.Pin, INPUT_PULLUP);
   
   pixels.begin(); // This initializes the NeoPixel library.
-  //Do a color wipe
-  for (int j=0; j < NUMPIXELS; j++) {
-    pixels.setPixelColor(i,blue);
-    pixels.show();
-    delay(100);
+  for (int i=0; j < NUMPIXELS; j++) {
+    //pixels.setPixelColor(i,red);
   }
-  for (int j=0; j < NUMPIXELS; j++) {
-    pixels.setPixelColor(i,off);
-    pixels.show();
-    delay(100);
+  pixels.show();
+  for (int i=0; j < NUMPIXELS; j++) {
+    // pixels.setPixelColor(i,blue);
   }
+  pixels.show();
+  for (int i=0; j < NUMPIXELS; j++) {
+    // pixels.setPixelColor(i,off);
+  }
+  pixels.show();
 }
-
 void connectedLoop(PubSubClient* client) {
   if (isTime == 1){
     client->publish("stat/i3/laserZone/bumblebee_timer/laserTubeTime", outputBuffer);
@@ -123,38 +125,31 @@ void connectedLoop(PubSubClient* client) {
 }
 
 void loop() {
-  readyChecksum = 0;  //reset the checksum
-  Ready.State = 1; //Assume not ready, check for readiness below
+  Ready.State = 0;
+  ledOn(Ready);
   for (int j = 0; j < componentListLen; j++) {
-    checkState(componentList[j]);
-    setLED(componentList[j]);
-    if (componentList[j].State == 0) {
-      readyChecksum++;
+    componentList[j].State = digitalRead(componentList[j].Pin);
+    if(componentList[j].State == 0){
+      ledOn(componentList[j]);
+    }
+    else{
+      ledOff(componentList[j]);
+      Ready.State = 1;
+      ledOff(Ready);
     }
   }
-  // check if all devices have reported state 0
-  if (readyChecksum == componentListLen) {
-    Ready.State = 0;
-  }
-  setLED(Ready);
-  pixels.show();
-  delay(delayVal);
-  readFromTimer();
-  loop_mqtt();
-}
-
-void checkState(component device) {
-  if (device.Pin >=0) {
-    device.State = digitalRead(device.Pin);
-  }
-}
-void setLED(component device) {
-  if (device.State == 0) {
-    ledOn(device);
+  if (ExhaustFan.State == 0) {
+    ledOn(ExhaustFan);
   }
   else {
-    ledOff(device);
+    ledOff(ExhaustFan);
+    Ready.State = 1;
+    ledOff(Ready);
   }
+  readFromTimer();
+  loop_mqtt();
+  pixels.show();
+  delay(delayVal);
 }
 
 void ledOn(component device) {
@@ -166,7 +161,6 @@ void ledOff(component device) {
   pixels.setPixelColor(device.OnLED, off);
   pixels.setPixelColor(device.OffLED, red);
 }
-
 bool isNumeric(String str, int index) {
   for (byte i = index; i < str.length(); i++) {
     if(!isDigit(str.charAt(i))) {
@@ -176,11 +170,13 @@ bool isNumeric(String str, int index) {
   return true;
 }
 
-void readFromTimer(){
-  // Watch serial for various values sent from timer
+void readFromTimer() {
+	// Watch serial for various values sent from timer
   // Serial read code borrowed from http://robotic-controls.com/learn/arduino/arduino-arduino-serial-communication
+  
   k = 0;
   String timerInput = "\0";
+  
   if (Serial.available()){
     delay(100);
     while(Serial.available() && k < bufferSize) {
@@ -188,7 +184,17 @@ void readFromTimer(){
     }
     timerInputBuffer[k++] = '\0';
     timerInput = String(timerInputBuffer);
+    /*for (byte k = 0; k<timerInput.length(); k++) {
+      Serial.print("\nCharacter\n");
+      Serial.println(timerInput.charAt(k)); 
+      Serial.print("\nValue\n");
+      Serial.print(timerInput.charAt(k));
+    }*/
     Serial.println(timerInput);
+    //resetting these here doesn't seem to work right - does loop_mqtt() call connectedLoop() more than once?
+    //isTime = 0;
+    //isWriteCount = 0;
+    //isOnline = 0;
     timerInput.trim(); // get rid of tailing carriage return that mucks up isNumeric()
     // Logical checks for trigger characters
     if (timerInput.charAt(0) == '&') {
