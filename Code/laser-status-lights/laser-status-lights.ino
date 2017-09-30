@@ -5,14 +5,14 @@
 #include "mqtt-wrapper.h"
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 
-#define PIXELPIN              5  //D1
-#define SHOPAIRVALVEPIN       4  //D2 //skip d3
-#define EXHAUSTGATEPIN        12  //D6
+#define PIXELPIN              13 //D7
+#define SHOPAIRVALVEPIN       4 //D0
+#define EXHAUSTGATEPIN        12 //D6
 #define EXHAUSTFANPIN         -1 //sensed via mqtt, no real pin
-#define SHOPAIRCOMPRESSORPIN  14 //D5 - skip D4 since it's TX1
+#define SHOPAIRCOMPRESSORPIN  14 //D5
 #define READYPIN              -1 //virtual item, no pin
 
-#define NUMPIXELS   12
+#define NUMPIXELS   10
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIXELPIN, NEO_GRB + NEO_KHZ800);
 
 // define some colors for the neopixels
