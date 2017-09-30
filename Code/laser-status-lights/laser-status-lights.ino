@@ -3,6 +3,7 @@
 #include <Adafruit_NeoPixel.h>
 #include <component.h>
 #include "mqtt-wrapper.h"
+#define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 
 #define PIXELPIN              5  //D1
 #define SHOPAIRVALVEPIN       4  //D2 //skip d3
@@ -27,18 +28,19 @@ int j = 0;
 // component {PIN, OffLED, OnLED, State}
 // State 0 = on, 1 = off
 
-component ExhaustGate = {EXHAUSTGATEPIN, 0, 1, 1};
-component ExhaustFan = {EXHAUSTFANPIN, 2, 3, 1};
-component ShopAirValve = {SHOPAIRVALVEPIN, 4, 5, 1};
-component ShopAirCompressor = {SHOPAIRCOMPRESSORPIN, 6, 7, 1};
+struct component ExhaustGate = {EXHAUSTGATEPIN, 0, 1, 1,""};
+struct component ExhaustFan = {EXHAUSTFANPIN, 2, 3, 1,"stat/i3/laserZone/ventFan/POWER"};
+struct component ShopAirValve = {SHOPAIRVALVEPIN, 4, 5, 1,""};
+struct component ShopAirCompressor = {SHOPAIRCOMPRESSORPIN, 6, 7, 1,""};
 
 //List of components with physical switches
-component componentList[] = {ShopAirValve, ShopAirCompressor, ExhaustGate};
-component Ready = {READYPIN, 8, 9, 0};
-int componentListLen = 3;
-
-// Ready light when all components are ready
-
+struct component physicalComponents[] = {ShopAirValve, ShopAirCompressor, ExhaustGate};
+struct component *mqttComponents[] = {&ExhaustFan};
+struct component Ready = {READYPIN, 8, 9, 0};
+int numPhysicalComponents = ARRAY_SIZE(physicalComponents);
+int numMqttComponents = ARRAY_SIZE(mqttComponents);
+int numComponents = numPhysicalComponents + numMqttComponents;
+int readyChecksum = 0;
 
 char buf[1024];
 int i = 0;
@@ -65,24 +67,30 @@ void callback(char* topic, byte* payload, unsigned int length, PubSubClient *cli
     Serial.print((char)payload[i]);
   }
   Serial.println();
-  topic += 34;
-  topic[3] = '\0';
   uint32_t c;
-
-  if((char)payload[1] == 'N') {
-    ExhaustFan.State = 0;
-  } else if ((char)payload[1] == 'F') {
-    ExhaustFan.State = 1;
-  } else {
-    Serial.println("NOT A THING FUCK");
-  }
+  for (int j = 0; j < numMqttComponents; j++) {
+  	Serial.println(topic);
+  	Serial.println(mqttComponents[j]->mqttTopic);
+  	if (strcmp(topic, mqttComponents[j]->mqttTopic) == 0){
+  		Serial.print("yay");
+		  if((char)payload[1] == 'N') {
+		    mqttComponents[j]->State = 0;
+		  } else if ((char)payload[1] == 'F') {
+		    mqttComponents[j]->State = 1;
+		  } else {
+		    Serial.println("NOT A THING FUCK");
+		  }
+		}
+	}
 }
 void connectSuccess(PubSubClient* client, char* ip) {
   Serial.println("win");
   //subscribe and shit here
   sprintf(buf, "{\"Hostname\":\"%s\", \"IPaddress\":\"%s\"}", host_name, ip);
   client->publish("tele/i3/laserZone/bumblebee_status_lights/INFO2", buf);
-  client->subscribe("stat/i3/laserZone/ventFan/POWER");
+  for (int j = 0; j < numMqttComponents; j++) {
+		client->subscribe(mqttComponents[j]->mqttTopic);
+  }
   client->publish("cmnd/i3/laserZone/ventFan/POWER", "");
 }
 void setup() {
@@ -125,26 +133,32 @@ void connectedLoop(PubSubClient* client) {
 }
 
 void loop() {
-  Ready.State = 0;
-  ledOn(Ready);
-  for (int j = 0; j < componentListLen; j++) {
-    componentList[j].State = digitalRead(componentList[j].Pin);
-    if(componentList[j].State == 0){
-      ledOn(componentList[j]);
+	readyChecksum = 0;
+  Ready.State = 1;
+  ledOff(Ready);
+  for (int j = 0; j < numPhysicalComponents; j++) {
+		physicalComponents[j].State = digitalRead(physicalComponents[j].Pin);
+    if(physicalComponents[j].State == 0){
+      ledOn(physicalComponents[j]);
+      readyChecksum++;
     }
-    else{
-      ledOff(componentList[j]);
-      Ready.State = 1;
-      ledOff(Ready);
+    else {
+      ledOff(physicalComponents[j]);
     }
   }
-  if (ExhaustFan.State == 0) {
-    ledOn(ExhaustFan);
+  for (int j = 0; j < numMqttComponents; j++) {
+	  //Serial.println(mqttComponents[j].State);
+    //delay(200);
+    if(mqttComponents[j]->State == 0){
+      ledOn(*mqttComponents[j]);
+      readyChecksum++;
+    }
+    else {
+      ledOff(*mqttComponents[j]);
+    }
   }
-  else {
-    ledOff(ExhaustFan);
-    Ready.State = 1;
-    ledOff(Ready);
+  if (readyChecksum == numComponents) {
+  	ledOn(Ready);
   }
   readFromTimer();
   loop_mqtt();
