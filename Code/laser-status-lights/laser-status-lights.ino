@@ -5,15 +5,15 @@
 #include "mqtt-wrapper.h"
 #define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 
-#define PIXELPIN              13 //D7
-#define SHOPAIRVALVEPIN       4 //D0
-#define EXHAUSTGATEPIN        12 //D6
-#define EXHAUSTFANPIN         -1 //sensed via mqtt, no real pin
-#define SHOPAIRCOMPRESSORPIN  14 //D5
-#define READYPIN              -1 //virtual item, no pin
+#define PIXEL_PIN              13 //D7
+#define SHOP_AIR_VALVE_PIN       4 //D0
+#define EXHAUST_GATE_PIN        12 //D6
+#define EXHAUST_FAN_PIN         -1 //sensed via mqtt, no real pin
+#define SHOP_AIR_COMPRESSOR_PIN  14 //D5
+#define READY_PIN              -1 //virtual item, no pin
 
-#define NUMPIXELS   10
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIXELPIN, NEO_GRB + NEO_KHZ800);
+#define NUM_PIXELS   10
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUM_PIXELS, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
 // define some colors for the neopixels
 uint32_t red = pixels.Color(200,0,0);
@@ -28,15 +28,15 @@ int j = 0;
 // component {PIN, OffLED, OnLED, State}
 // State 0 = on, 1 = off
 
-struct component ExhaustGate = {EXHAUSTGATEPIN, 0, 1, 1,""};
-struct component ExhaustFan = {EXHAUSTFANPIN, 2, 3, 1,"stat/i3/laserZone/ventFan/POWER"};
-struct component ShopAirValve = {SHOPAIRVALVEPIN, 4, 5, 1,""};
-struct component ShopAirCompressor = {SHOPAIRCOMPRESSORPIN, 6, 7, 1,""};
+struct component ExhaustGate = {EXHAUST_GATE_PIN, 0, 1, 1,""};
+struct component ExhaustFan = {EXHAUST_FAN_PIN, 2, 3, 1,"stat/i3/laserZone/ventFan/POWER"};
+struct component ShopAirValve = {SHOP_AIR_VALVE_PIN, 4, 5, 1,""};
+struct component ShopAirCompressor = {SHOP_AIR_COMPRESSOR_PIN, 6, 7, 1,""};
 
 //List of components with physical switches
 struct component physicalComponents[] = {ShopAirValve, ShopAirCompressor, ExhaustGate};
 struct component *mqttComponents[] = {&ExhaustFan};
-struct component Ready = {READYPIN, 8, 9, 0};
+struct component Ready = {READY_PIN, 8, 9, 0};
 int numPhysicalComponents = ARRAY_SIZE(physicalComponents);
 int numMqttComponents = ARRAY_SIZE(mqttComponents);
 int numComponents = numPhysicalComponents + numMqttComponents;
@@ -104,15 +104,15 @@ void setup() {
   pinMode(ShopAirCompressor.Pin, INPUT_PULLUP);
   
   pixels.begin(); // This initializes the NeoPixel library.
-  for (int i=0; j < NUMPIXELS; j++) {
+  for (int i=0; j < NUM_PIXELS; j++) {
     //pixels.setPixelColor(i,red);
   }
   pixels.show();
-  for (int i=0; j < NUMPIXELS; j++) {
+  for (int i=0; j < NUM_PIXELS; j++) {
     // pixels.setPixelColor(i,blue);
   }
   pixels.show();
-  for (int i=0; j < NUMPIXELS; j++) {
+  for (int i=0; j < NUM_PIXELS; j++) {
     // pixels.setPixelColor(i,off);
   }
   pixels.show();
