@@ -57,11 +57,16 @@ void loop() {
     userMillis = userMillis + millisDiff;
     millisDiff = 0;
   }
+  //Serial.println(userMillis);
   // Check if it's time to publish
+  // > 50 ms is to prevent early publishing
   millisTemp = (unsigned long) millis();
-  if ((userMillis > 0) && (lastPublishTime - millisTemp > 30000 )) { 
+  if ((userMillis < 5) && (userMillis > 0) && (millisTemp - lastPublishTime > 30000 )) { 
+    lastPublishTime = millisTemp;
+   }
+  else if ((userMillis > 0) && (millisTemp - lastPublishTime > 30000 )) { 
     Serial.println(timeChar+userMillis);
     lastPublishTime = millisTemp;
     userMillis = 0;
-   }  
+   }
 }
