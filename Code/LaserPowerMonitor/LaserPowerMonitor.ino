@@ -1,9 +1,4 @@
-#include <EEPROM.h>
-#include "EEPROMAnything.h"
-#include <Wire.h> 
-#include <LiquidCrystal_I2C.h>
 #include <stdio.h>
-#include <Adafruit_NeoPixel.h>
 
 //Pin Definitions
 int analogPin = 0;      // input voltage connected to analog pin 0 from interface board
@@ -23,9 +18,11 @@ unsigned long userMillis = 0;
 unsigned long lastPublishTime = 0;
 
 String timeChar = "&";
+String onlineChar = "#";
 
 void setup() {
   Serial.begin(115200);
+  Serial.println(onlineChar);
 }
 
 void loop() {
@@ -34,25 +31,25 @@ void loop() {
     // read the input pin
     analogVal = analogRead(analogPin);
     
-      // laser has been off, laser turning on here
+    // laser has been off, turning on
     if ((analogVal <  anaLowThreshold) && !lastLaserOn) {
       lastLaserOn = true;
       millisOnLast = (unsigned long) millis();
       millisDiff = millisOnLast - millisOffLast;
     }
-      // laser has been on here, continuing on
+    // laser has been on, continuing on
     else if ((analogVal < anaLowThreshold) && lastLaserOn) {
       lastLaserOn = true;
       millisTemp = (unsigned long) millis();
       millisDiff = millisTemp-millisOnLast;
       millisOnLast = millisTemp;
     }
-      // laser has been on, turning off
+    // laser has been on, turning off
     else if ((analogVal > anaHighThreshold) && lastLaserOn) {
       lastLaserOn = false;
       millisOffLast = (unsigned long) millis();
     }
-      // laser has been off, staying off
+    // laser has been off, staying off
     else {
       lastLaserOn = false;
       millisOffLast = (unsigned long) millis();
@@ -60,10 +57,11 @@ void loop() {
     userMillis = userMillis + millisDiff;
     millisDiff = 0;
   }
-  
-  if ((userMillis > 0) && (lastPublishTime - millis() > 30000 )) { 
+  // Check if it's time to publish
+  millisTemp = (unsigned long) millis();
+  if ((userMillis > 0) && (lastPublishTime - millisTemp > 30000 )) { 
     Serial.println(timeChar+userMillis);
-    lastPublishTime = millis();
+    lastPublishTime = millisTemp;
     userMillis = 0;
    }  
 }

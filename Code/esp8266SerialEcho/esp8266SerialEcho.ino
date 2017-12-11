@@ -17,10 +17,8 @@ char outputBuffer[bufferSize];
 int i = 0;
 int j = 0;
 bool isTime = 0;
-bool isWriteCount = 0;
 bool isOnline = 0;
 String tubeTime;
-String writeCount;
 
 void callback(char* topic, byte* payload, unsigned int length, PubSubClient *client) {
   Serial.print("Message arrived [");
@@ -32,8 +30,7 @@ void callback(char* topic, byte* payload, unsigned int length, PubSubClient *cli
   Serial.println();
 }
 void connectSuccess(PubSubClient* client, char* ip) {
-  Serial.println("win");
-  //subscribe and shit here
+  Serial.println("connect success");
   sprintf(buf, "{\"Hostname\":\"%s\", \"IPaddress\":\"%s\"}", host_name, ip);
   client->publish("tele/i3/laserZone/bumblebee_timer/INFO2", buf);
 }
@@ -45,16 +42,12 @@ void setup() {
 // Do the mqtt stuff:
 void connectedLoop(PubSubClient* client) {
   if (isTime == 1){
-    client->publish("stat/i3/laserZone/bumblebee_timer/laserTubeTime", outputBuffer);
-  }
-  if (isWriteCount == 1){
-    client->publish("stat/i3/laserZone/bumblebee_timer/EEPROMwriteCount", outputBuffer);
+    client->publish("stat/i3/laserZone/bumblebee_timer/tube-time", outputBuffer);
   }
     if (isOnline == 1){
     client->publish("stat/i3/laserZone/bumblebee_timer/status", "Laser_Timer_Online");
   }
   isTime = 0;
-  isWriteCount = 0;
   isOnline = 0;
 }
 bool isNumeric(String str, int index) {
@@ -69,7 +62,6 @@ bool isNumeric(String str, int index) {
 void loop() {
   // Watch serial for various values sent from timer
   // Serial read code borrowed from http://robotic-controls.com/learn/arduino/arduino-arduino-serial-communication
-  
   j = 0;
   String timerInput = "\0";
   
@@ -87,10 +79,6 @@ void loop() {
       Serial.print(timerInput.charAt(j));
     }*/
     Serial.println(timerInput);
-    //resetting these here doesn't seem to work right - does loop_mqtt() call connectedLoop() more than once?
-    //isTime = 0;
-    //isWriteCount = 0;
-    //isOnline = 0;
     timerInput.trim(); // get rid of tailing carriage return that mucks up isNumeric()
     // Logical checks for trigger characters
     if (timerInput.charAt(0) == '&') {
@@ -102,17 +90,6 @@ void loop() {
         Serial.println(tubeTime);
       }
       else Serial.print("(&) Input not recognized\n");
-    }
-    else if (timerInput.charAt(0) == '^') {
-      // substitute a different logical test below for other data
-      if (isNumeric(timerInput,1) && timerInput.length() > 1) {
-        isWriteCount = 1;
-        writeCount = timerInput.substring(1);
-        writeCount.toCharArray(outputBuffer,bufferSize);
-        Serial.print("Other: ");
-        Serial.println(writeCount);
-      }
-      else Serial.print("(^) Input not recognized\n");
     }
     else if (timerInput.charAt(0) == '#') {
       isOnline = 1;
