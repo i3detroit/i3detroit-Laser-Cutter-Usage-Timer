@@ -42,7 +42,7 @@ void setup() {
 // Do the mqtt stuff:
 void connectedLoop(PubSubClient* client) {
   if (isTime == 1){
-    client->publish("stat/i3/laserZone/bumblebee_timer/tube-time", outputBuffer);
+    client->publish("stat/i3/laserZone/bumblebee_timer/laserTubeTime", outputBuffer);
   }
     if (isOnline == 1){
     client->publish("stat/i3/laserZone/bumblebee_timer/status", "Laser_Timer_Online");
