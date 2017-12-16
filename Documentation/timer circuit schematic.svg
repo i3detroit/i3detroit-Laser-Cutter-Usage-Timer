@@ -6,47 +6,26 @@
 	.st0{fill:#D1D3D4;stroke:#808285;}
 	.st1{fill:none;stroke:#000000;stroke-width:0.7087;stroke-linecap:round;stroke-linejoin:round;}
 	.st2{fill:none;stroke:#000000;stroke-width:0.7087;stroke-linecap:round;}
-	.st3{fill:none;stroke:#000000;stroke-width:0.7087;}
-	.st4{fill:#010101;}
-	.st5{font-family:'DroidSans';}
-	.st6{font-size:5px;}
-	.st7{font-size:12px;}
-	.st8{enable-background:new    ;}
-	.st9{font-family:'DroidSans-Bold';}
-	.st10{fill:none;stroke:#000000;stroke-width:1.0006;}
-	.st11{fill:none;stroke:#000000;}
+	.st3{fill:#010101;}
+	.st4{font-family:'DroidSans';}
+	.st5{font-size:5px;}
+	.st6{font-size:12px;}
+	.st7{enable-background:new    ;}
+	.st8{font-family:'DroidSans-Bold';}
+	.st9{fill:none;stroke:#000000;stroke-width:1.0006;}
+	.st10{fill:none;stroke:#000000;}
 </style>
 <rect id="XMLID_34_" x="178.2" y="61.8" class="st0" width="46.5" height="58.7"/>
 <rect id="XMLID_20_" x="58.7" y="61.8" class="st0" width="36.4" height="135.5"/>
 <line id="connector0pin_2_" class="st1" x1="102.1" y1="91.7" x2="95.1" y2="91.7"/>
 <polyline id="XMLID_212_" class="st1" points="88.4,89.8 92.6,91.7 88.4,93.7 "/>
 <line id="line_2_" class="st1" x1="92.4" y1="91.7" x2="97.7" y2="91.7"/>
-<line id="connector0pin_4_" class="st1" x1="102.1" y1="142.1" x2="95.1" y2="142.1"/>
-<polyline id="XMLID_210_" class="st1" points="88.4,140.2 92.6,142.1 88.4,144.1 "/>
-<line id="line_4_" class="st1" x1="92.4" y1="142.1" x2="97.7" y2="142.1"/>
 <line id="connector0pin_5_" class="st1" x1="102.1" y1="70.1" x2="95.1" y2="70.1"/>
 <polyline id="XMLID_209_" class="st1" points="88.4,68.2 92.6,70.1 88.4,72.1 "/>
 <line id="line_5_" class="st1" x1="92.4" y1="70.1" x2="97.7" y2="70.1"/>
-<line id="connector0pin_17_" class="st1" x1="102.1" y1="113.3" x2="95.1" y2="113.3"/>
+<line id="connector0pin_17_" class="st1" x1="113.3" y1="113.3" x2="95.1" y2="113.3"/>
 <polyline id="XMLID_197_" class="st1" points="88.4,111.4 92.6,113.3 88.4,115.3 "/>
 <line id="line_17_" class="st1" x1="92.4" y1="113.3" x2="97.7" y2="113.3"/>
-<line id="XMLID_196_" class="st2" x1="133.1" y1="142.1" x2="134.9" y2="142.1"/>
-<line id="XMLID_195_" class="st2" x1="120.5" y1="142.1" x2="133.1" y2="138.5"/>
-<circle id="XMLID_194_" class="st3" cx="120.5" cy="142.1" r="0.4"/>
-<circle id="XMLID_193_" class="st3" cx="134.9" cy="142.1" r="0.4"/>
-<line id="connector0pin_18_" class="st2" x1="113.3" y1="142.1" x2="120.5" y2="142.1"/>
-<line id="connector2pin" class="st2" x1="142.1" y1="142.1" x2="134.9" y2="142.1"/>
-<line id="XMLID_192_" class="st2" x1="102.5" y1="120.5" x2="105.3" y2="121.6"/>
-<line id="XMLID_191_" class="st2" x1="105.3" y1="121.6" x2="99.6" y2="123.4"/>
-<line id="XMLID_190_" class="st2" x1="99.6" y1="123.4" x2="105.3" y2="125.2"/>
-<line id="XMLID_189_" class="st2" x1="105.3" y1="125.2" x2="99.6" y2="127"/>
-<line id="XMLID_188_" class="st2" x1="99.6" y1="127" x2="105.3" y2="128.8"/>
-<line id="XMLID_187_" class="st2" x1="105.3" y1="128.8" x2="99.6" y2="130.6"/>
-<line id="XMLID_186_" class="st2" x1="99.6" y1="130.6" x2="105.3" y2="132.4"/>
-<line id="XMLID_185_" class="st2" x1="105.3" y1="132.4" x2="99.6" y2="134.2"/>
-<line id="XMLID_184_" class="st2" x1="99.6" y1="134.2" x2="102.5" y2="134.9"/>
-<line id="connector1pin" class="st2" x1="102.5" y1="142.1" x2="102.5" y2="134.9"/>
-<line id="connector0pin_19_" class="st2" x1="102.5" y1="113.3" x2="102.5" y2="120.5"/>
 <line id="XMLID_183_" class="st2" x1="142.1" y1="88.1" x2="144.9" y2="87"/>
 <line id="XMLID_182_" class="st2" x1="144.9" y1="87" x2="139.2" y2="85.2"/>
 <line id="XMLID_181_" class="st2" x1="139.2" y1="85.2" x2="144.9" y2="83.4"/>
@@ -58,10 +37,6 @@
 <line id="XMLID_175_" class="st2" x1="139.2" y1="74.4" x2="142.1" y2="73.7"/>
 <line id="connector1pin_1_" class="st2" x1="142.1" y1="70.1" x2="142.1" y2="73.7"/>
 <line id="connector0pin_20_" class="st2" x1="142.1" y1="95.3" x2="142.1" y2="88.1"/>
-<path id="connector0pin_21_" class="st2" d="M156.5,147.6v-5.4"/>
-<path id="path4098" class="st2" d="M149.8,147.6h13.4"/>
-<path id="path4100" class="st2" d="M152,150.3h8.9"/>
-<path id="path4102" class="st2" d="M158.7,153h-4.5"/>
 <line id="XMLID_174_" class="st2" x1="149.3" y1="70.1" x2="150.3" y2="67.2"/>
 <line id="XMLID_173_" class="st2" x1="150.3" y1="67.2" x2="152.1" y2="73"/>
 <line id="XMLID_172_" class="st2" x1="152.1" y1="73" x2="153.9" y2="67.2"/>
@@ -84,60 +59,49 @@
 <line id="line_20_" class="st1" x1="184.6" y1="91.7" x2="179.2" y2="91.7"/>
 <line id="XMLID_162_" class="st2" x1="113.3" y1="98.9" x2="113.3" y2="100.4"/>
 <line id="XMLID_161_" class="st2" x1="113.3" y1="106.1" x2="113.3" y2="104.7"/>
-<rect id="XMLID_160_" x="107.5" y="103.2" class="st4" width="11.5" height="1.4"/>
-<rect id="XMLID_159_" x="107.5" y="100.4" class="st4" width="11.5" height="1.4"/>
+<rect id="XMLID_160_" x="107.5" y="103.2" class="st3" width="11.5" height="1.4"/>
+<rect id="XMLID_159_" x="107.5" y="100.4" class="st3" width="11.5" height="1.4"/>
 <line id="connector1pin_3_" class="st2" x1="113.3" y1="91.7" x2="113.3" y2="98.9"/>
 <line id="connector0pin_26_" class="st2" x1="113.3" y1="113.3" x2="113.3" y2="106.1"/>
 <line id="XMLID_158_" class="st2" x1="113.3" y1="84.5" x2="113.3" y2="83.1"/>
 <line id="XMLID_157_" class="st2" x1="113.3" y1="77.3" x2="113.3" y2="78.8"/>
-<rect id="XMLID_156_" x="107.5" y="78.8" class="st4" width="11.5" height="1.4"/>
-<rect id="XMLID_155_" x="107.5" y="81.6" class="st4" width="11.5" height="1.4"/>
+<rect id="XMLID_156_" x="107.5" y="78.8" class="st3" width="11.5" height="1.4"/>
+<rect id="XMLID_155_" x="107.5" y="81.6" class="st3" width="11.5" height="1.4"/>
 <line id="connector0pin_27_" class="st2" x1="113.3" y1="91.7" x2="113.3" y2="84.5"/>
 <line id="connector1pin_4_" class="st2" x1="113.3" y1="70.1" x2="113.3" y2="77.3"/>
-<line id="XMLID_154_" class="st2" x1="102.5" y1="142.1" x2="102.5" y2="142.1"/>
-<circle id="XMLID_153_" class="st4" cx="102.5" cy="142.1" r="1.4"/>
-<line id="XMLID_152_" class="st2" x1="156.5" y1="142.1" x2="142.1" y2="142.1"/>
-<line id="XMLID_151_" class="st2" x1="102.5" y1="142.1" x2="113.3" y2="142.1"/>
-<circle id="XMLID_150_" class="st4" cx="102.5" cy="142.1" r="1.4"/>
 <line id="XMLID_149_" class="st2" x1="102.5" y1="113.3" x2="102.5" y2="113.3"/>
-<circle id="XMLID_148_" class="st4" cx="102.5" cy="113.3" r="1.4"/>
 <line id="XMLID_147_" class="st2" x1="113.3" y1="113.3" x2="142" y2="113.3"/>
-<circle id="XMLID_146_" class="st4" cx="113.3" cy="113.3" r="1.4"/>
-<line id="XMLID_145_" class="st2" x1="102.5" y1="113.3" x2="113.3" y2="113.3"/>
-<circle id="XMLID_144_" class="st4" cx="102.5" cy="113.3" r="1.4"/>
+<circle id="XMLID_146_" class="st3" cx="113.3" cy="113.3" r="1.4"/>
 <line id="XMLID_143_" class="st2" x1="142" y1="113.3" x2="170.9" y2="113.3"/>
-<circle id="XMLID_142_" class="st4" cx="142" cy="113.3" r="1.4"/>
+<circle id="XMLID_142_" class="st3" cx="142" cy="113.3" r="1.4"/>
 <line id="XMLID_141_" class="st2" x1="170.9" y1="70.1" x2="170.9" y2="70.1"/>
 <line id="XMLID_140_" class="st2" x1="113.3" y1="113.3" x2="113.3" y2="113.3"/>
 <line id="XMLID_139_" class="st2" x1="142" y1="113.3" x2="142.1" y2="95.3"/>
 <line id="XMLID_138_" class="st2" x1="113.3" y1="91.7" x2="102.5" y2="91.7"/>
-<circle id="XMLID_137_" class="st4" cx="113.3" cy="91.7" r="1.4"/>
+<circle id="XMLID_137_" class="st3" cx="113.3" cy="91.7" r="1.4"/>
 <line id="XMLID_136_" class="st2" x1="113.3" y1="91.7" x2="113.3" y2="91.7"/>
-<circle id="XMLID_135_" class="st4" cx="113.3" cy="91.7" r="1.4"/>
+<circle id="XMLID_135_" class="st3" cx="113.3" cy="91.7" r="1.4"/>
 <line id="XMLID_134_" class="st2" x1="113.3" y1="70.1" x2="102.5" y2="70.1"/>
-<circle id="XMLID_133_" class="st4" cx="113.3" cy="70.1" r="1.4"/>
+<circle id="XMLID_133_" class="st3" cx="113.3" cy="70.1" r="1.4"/>
 <line id="XMLID_132_" class="st2" x1="142.1" y1="70.1" x2="113.3" y2="70.1"/>
-<circle id="XMLID_131_" class="st4" cx="142.1" cy="70.1" r="1.4"/>
-<circle id="XMLID_130_" class="st4" cx="113.3" cy="70.1" r="1.4"/>
+<circle id="XMLID_131_" class="st3" cx="142.1" cy="70.1" r="1.4"/>
+<circle id="XMLID_130_" class="st3" cx="113.3" cy="70.1" r="1.4"/>
 <line id="XMLID_129_" class="st2" x1="113.3" y1="91.7" x2="174.5" y2="91.7"/>
-<circle id="XMLID_128_" class="st4" cx="113.3" cy="91.7" r="1.4"/>
-<circle id="XMLID_127_" class="st4" cx="142.1" cy="70.1" r="1.4"/>
-<text id="XMLID_1_" transform="matrix(1 0 0 1 120.2023 148.3608)" class="st4 st5 st6">Reset</text>
-<text id="XMLID_16_" transform="matrix(1 0 0 1 107.3453 128.8037)" class="st4 st5 st6">1kΩ</text>
-<text id="XMLID_15_" transform="matrix(1 0 0 1 125.0114 83.084)" class="st4 st5 st6">2.2kΩ</text>
-<text id="XMLID_17_" transform="matrix(1 0 0 1 153.0443 64.9825)" class="st4 st5 st6">33Ω</text>
-<text id="XMLID_2_" transform="matrix(1 0 0 1 187.0276 71.3728)" class="st4 st5 st6">Interface board</text>
-<text id="XMLID_4_" transform="matrix(1 0 0 1 187.4586 114.0359)" class="st4 st5 st6">+5V</text>
-<text id="XMLID_6_" transform="matrix(1 0 0 1 78.395 115.4897)" class="st4 st5 st6">+5V</text>
-<text id="XMLID_7_" transform="matrix(1 0 0 1 190.1855 93.6218)" class="st4 st5 st6">GND</text>
-<text id="XMLID_8_" transform="matrix(1 0 0 1 76.2291 93.3974)" class="st4 st5 st6">GND</text>
-<text id="XMLID_9_" transform="matrix(1 0 0 1 80.9509 72.0437)" class="st4 st5 st6">A0</text>
-<text id="XMLID_10_" transform="matrix(1 0 0 1 80.5701 144.0437)" class="st4 st5 st6">D7</text>
-<text id="XMLID_11_" transform="matrix(1 0 0 1 95.8624 103.4287)" class="st4 st5 st6">47µF</text>
+<circle id="XMLID_128_" class="st3" cx="113.3" cy="91.7" r="1.4"/>
+<circle id="XMLID_127_" class="st3" cx="142.1" cy="70.1" r="1.4"/>
+<text id="XMLID_15_" transform="matrix(1 0 0 1 125.0114 83.084)" class="st3 st4 st5">2.2kΩ</text>
+<text id="XMLID_17_" transform="matrix(1 0 0 1 153.0443 64.9825)" class="st3 st4 st5">33Ω</text>
+<text id="XMLID_2_" transform="matrix(1 0 0 1 187.0276 71.3728)" class="st3 st4 st5">Interface board</text>
+<text id="XMLID_4_" transform="matrix(1 0 0 1 187.4586 114.0359)" class="st3 st4 st5">+5V</text>
+<text id="XMLID_6_" transform="matrix(1 0 0 1 78.395 115.4897)" class="st3 st4 st5">+5V</text>
+<text id="XMLID_7_" transform="matrix(1 0 0 1 190.1855 93.6218)" class="st3 st4 st5">GND</text>
+<text id="XMLID_8_" transform="matrix(1 0 0 1 76.2291 93.3974)" class="st3 st4 st5">GND</text>
+<text id="XMLID_9_" transform="matrix(1 0 0 1 80.9509 72.0437)" class="st3 st4 st5">A0</text>
+<text id="XMLID_11_" transform="matrix(1 0 0 1 95.8624 103.4287)" class="st3 st4 st5">47µF</text>
 <polyline id="XMLID_72_" class="st1" points="88.4,166.7 92.6,168.7 88.4,170.6 "/>
-<text id="XMLID_71_" transform="matrix(1 0 0 1 78.3953 170.8168)" class="st4 st5 st6">+5V</text>
-<text id="XMLID_30_" transform="matrix(1 0 0 1 95.62 82.605)" class="st4 st5 st6">47nF</text>
-<text id="XMLID_31_" transform="matrix(0 -1 1 0 69.9823 172.7303)" class="st5 st7">Arduino Nano v3</text>
+<text id="XMLID_71_" transform="matrix(1 0 0 1 78.3953 170.8168)" class="st3 st4 st5">+5V</text>
+<text id="XMLID_30_" transform="matrix(1 0 0 1 95.62 82.605)" class="st3 st4 st5">47nF</text>
+<text id="XMLID_31_" transform="matrix(0 -1 1 0 69.9823 172.7303)" class="st4 st6">Arduino Nano v3</text>
 <rect id="XMLID_48_" x="160.7" y="168.4" class="st0" width="83.8" height="28.9"/>
 <polyline id="XMLID_46_" class="st1" points="166.5,188.4 162.4,190.4 166.5,192.3 "/>
 <polyline id="XMLID_45_" class="st1" points="166.5,174 162.4,176 166.5,177.9 "/>
@@ -145,36 +109,36 @@
 <polyline id="XMLID_47_" class="st1" points="88.4,174 92.6,176 88.4,177.9 "/>
 <polyline id="XMLID_43_" class="st1" points="88.4,181.2 92.6,183.2 88.4,185.1 "/>
 <polyline id="XMLID_42_" class="st1" points="88.4,188.4 92.6,190.4 88.4,192.3 "/>
-<text id="XMLID_41_" transform="matrix(1 0 0 1 167.5424 192.0243)" class="st4 st5 st6">VIN</text>
-<text id="XMLID_40_" transform="matrix(1 0 0 1 167.5422 184.5162)" class="st4 st5 st6">GND</text>
-<text id="XMLID_39_" transform="matrix(1 0 0 1 78.5653 192.0243)" class="st4 st5 st6">VIN</text>
-<text id="XMLID_73_" transform="matrix(1 0 0 1 77.0566 160.8572)" class="st4 st5 st6">3.3V</text>
-<text id="XMLID_38_" transform="matrix(1 0 0 1 81.4126 177.8702)" class="st4 st5 st6">TX</text>
-<text id="XMLID_37_" transform="matrix(1 0 0 1 76.2291 185.3163)" class="st4 st5 st6">GND</text>
-<text id="XMLID_36_" transform="matrix(1 0 0 1 167.5425 177.3163)" class="st4 st5 st6">RX</text>
-<text id="XMLID_35_" transform="matrix(1 0 0 1 192.4655 180.4021)"><tspan x="0" y="0" class="st5 st7">HUZZAH</tspan><tspan x="0" y="14.4" class="st5 st7">ESP8266</tspan></text>
+<text id="XMLID_41_" transform="matrix(1 0 0 1 167.5424 192.0243)" class="st3 st4 st5">VIN</text>
+<text id="XMLID_40_" transform="matrix(1 0 0 1 167.5422 184.5162)" class="st3 st4 st5">GND</text>
+<text id="XMLID_39_" transform="matrix(1 0 0 1 78.5653 192.0243)" class="st3 st4 st5">VIN</text>
+<text id="XMLID_73_" transform="matrix(1 0 0 1 77.0566 160.8572)" class="st3 st4 st5">3.3V</text>
+<text id="XMLID_38_" transform="matrix(1 0 0 1 81.4126 177.8702)" class="st3 st4 st5">TX</text>
+<text id="XMLID_37_" transform="matrix(1 0 0 1 76.2291 185.3163)" class="st3 st4 st5">GND</text>
+<text id="XMLID_36_" transform="matrix(1 0 0 1 167.5425 177.3163)" class="st3 st4 st5">RX</text>
+<text id="XMLID_35_" transform="matrix(1 0 0 1 192.4655 180.4021)"><tspan x="0" y="0" class="st4 st6">HUZZAH</tspan><tspan x="0" y="14.4" class="st4 st6">ESP8266</tspan></text>
 <rect id="XMLID_49_" x="101.7" y="163" class="st0" width="50.1" height="23.8"/>
-<text id="XMLID_53_" transform="matrix(1 0 0 1 118.6436 168.7357)" class="st8"><tspan x="0" y="0" class="st4 st9 st6">Level</tspan><tspan x="-1.8" y="6" class="st4 st9 st6">Shifter</tspan></text>
-<line id="XMLID_50_" class="st10" x1="92.3" y1="190.4" x2="162.7" y2="190.4"/>
+<text id="XMLID_53_" transform="matrix(1 0 0 1 118.6436 168.7357)" class="st7"><tspan x="0" y="0" class="st3 st8 st5">Level</tspan><tspan x="-1.8" y="6" class="st3 st8 st5">Shifter</tspan></text>
+<line id="XMLID_50_" class="st9" x1="92.3" y1="190.4" x2="162.7" y2="190.4"/>
 <polyline id="XMLID_75_" class="st1" points="88.4,157.4 92.6,159.4 88.4,161.3 "/>
-<line id="XMLID_74_" class="st10" x1="92.3" y1="159.4" x2="151.8" y2="159.4"/>
+<line id="XMLID_74_" class="st9" x1="92.3" y1="159.4" x2="151.8" y2="159.4"/>
 <polyline id="XMLID_59_" class="st1" points="107.7,181.2 103.6,183.2 107.7,185.1 "/>
 <polyline id="XMLID_58_" class="st1" points="107.7,166.7 103.6,168.7 107.7,170.6 "/>
 <polyline id="XMLID_57_" class="st1" points="107.7,174 103.6,176 107.7,177.9 "/>
-<text id="XMLID_56_" transform="matrix(1 0 0 1 108.7241 184.8243)" class="st4 st5 st6">GND</text>
-<text id="XMLID_55_" transform="matrix(1 0 0 1 108.724 177.3163)" class="st4 st5 st6">C1</text>
-<text id="XMLID_54_" transform="matrix(1 0 0 1 108.7243 170.0165)" class="st4 st5 st6">HI</text>
+<text id="XMLID_56_" transform="matrix(1 0 0 1 108.7241 184.8243)" class="st3 st4 st5">GND</text>
+<text id="XMLID_55_" transform="matrix(1 0 0 1 108.724 177.3163)" class="st3 st4 st5">C1</text>
+<text id="XMLID_54_" transform="matrix(1 0 0 1 108.7243 170.0165)" class="st3 st4 st5">HI</text>
 <polyline id="XMLID_66_" class="st1" points="146,166.8 150.2,168.8 146,170.7 "/>
 <polyline id="XMLID_65_" class="st1" points="146,174 150.2,176 146,177.9 "/>
 <polyline id="XMLID_64_" class="st1" points="146,181.2 150.2,183.2 146,185.1 "/>
-<text id="XMLID_63_" transform="matrix(1 0 0 1 133.8726 184.8243)" class="st4 st5 st6">GND</text>
-<text id="XMLID_62_" transform="matrix(1 0 0 1 133.8995 170.6703)" class="st4 st5 st6">LOW</text>
-<text id="XMLID_52_" transform="matrix(1 0 0 1 139.178 178.1163)" class="st4 st5 st6">L1</text>
-<line id="XMLID_60_" class="st11" x1="149.9" y1="176" x2="162.7" y2="176"/>
-<line id="XMLID_61_" class="st11" x1="149.9" y1="183.2" x2="162.7" y2="183.2"/>
-<line id="XMLID_51_" class="st11" x1="151.9" y1="168.8" x2="149.9" y2="168.8"/>
-<line id="XMLID_68_" class="st11" x1="92.3" y1="183.2" x2="103.9" y2="183.2"/>
-<line id="XMLID_69_" class="st11" x1="92.3" y1="176" x2="103.9" y2="176"/>
+<text id="XMLID_63_" transform="matrix(1 0 0 1 133.8726 184.8243)" class="st3 st4 st5">GND</text>
+<text id="XMLID_62_" transform="matrix(1 0 0 1 133.8995 170.6703)" class="st3 st4 st5">LOW</text>
+<text id="XMLID_52_" transform="matrix(1 0 0 1 139.178 178.1163)" class="st3 st4 st5">L1</text>
+<line id="XMLID_60_" class="st10" x1="149.9" y1="176" x2="162.7" y2="176"/>
+<line id="XMLID_61_" class="st10" x1="149.9" y1="183.2" x2="162.7" y2="183.2"/>
+<line id="XMLID_51_" class="st10" x1="151.9" y1="168.8" x2="149.9" y2="168.8"/>
+<line id="XMLID_68_" class="st10" x1="92.3" y1="183.2" x2="103.9" y2="183.2"/>
+<line id="XMLID_69_" class="st10" x1="92.3" y1="176" x2="103.9" y2="176"/>
 <line id="line_21_" class="st1" x1="92.4" y1="168.7" x2="103.8" y2="168.7"/>
-<path id="XMLID_76_" class="st11" d="M151.6,168.8c2.6,0,4.7-2.1,4.7-4.7c0-2.6-2.1-4.7-4.7-4.7"/>
+<path id="XMLID_76_" class="st10" d="M151.6,168.8c2.6,0,4.7-2.1,4.7-4.7c0-2.6-2.1-4.7-4.7-4.7"/>
 </svg>
