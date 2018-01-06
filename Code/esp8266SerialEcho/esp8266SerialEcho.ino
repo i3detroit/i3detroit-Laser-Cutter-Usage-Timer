@@ -1,16 +1,36 @@
 /*
- * Based on https://github.com/i3detroit/mqtt-wrapper/commit/753bf3e4c900d1b0f58bdae45f233a4cac133e14#diff-722036d88083221fb60ee22839fe48f1
+ * Based on https://github.com/i3detroit/mqtt-wrapper/commit/78ad5fba9084906cc02cff3403d9b388b0d5127a
  *
  */
 #include "mqtt-wrapper.h"
 
-const char* host_name = "bumblebee_timer";
-const char* ssid = "i3detroit-wpa";
-const char* password = "i3detroit";
-const char* mqtt_server = "10.13.0.22";
-const int mqtt_port = 1883;
+#ifndef NAME
+#define NAME "bumblebee_timer"
+#endif
 
-char buf[1024];
+#ifndef TOPIC
+#define TOPIC "i3/inside/laser-zone/bumblebee-timer"
+#endif
+
+#ifndef WIFI_SSID
+#define WIFI_SSID "i3detroit-iot"
+#endif
+
+#ifndef WIFI_PASSWORD
+#define WIFI_PASSWORD "securityrisk"
+#endif
+
+#ifndef MQTT_SERVER
+#define MQTT_SERVER "10.13.0.22"
+#endif
+
+#ifndef MQTT_PORT
+#define MQTT_PORT 1883
+#endif
+
+struct mqtt_wrapper_options mqtt_options;
+
+char topicBuf[1024];
 const int bufferSize = 500;
 char timerInputBuffer[bufferSize];
 char outputBuffer[bufferSize];
@@ -21,31 +41,35 @@ bool isOnline = 0;
 String tubeTime;
 
 void callback(char* topic, byte* payload, unsigned int length, PubSubClient *client) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
+  
 }
 void connectSuccess(PubSubClient* client, char* ip) {
-  Serial.println("connect success");
-  sprintf(buf, "{\"Hostname\":\"%s\", \"IPaddress\":\"%s\"}", host_name, ip);
-  client->publish("tele/i3/laserZone/bumblebee_timer/INFO2", buf);
+  
 }
 void setup() {
   Serial.begin(115200);
-  setup_mqtt(connectedLoop, callback, connectSuccess, ssid, password, mqtt_server, mqtt_port, host_name);
+  mqtt_options.connectedLoop = connectedLoop;
+  mqtt_options.callback = callback;
+  mqtt_options.connectSuccess = connectSuccess;
+  mqtt_options.ssid = WIFI_SSID;
+  mqtt_options.password = WIFI_PASSWORD;
+  mqtt_options.mqtt_server = MQTT_SERVER;
+  mqtt_options.mqtt_port = MQTT_PORT;
+  mqtt_options.host_name = NAME;
+  mqtt_options.fullTopic = TOPIC;
+  mqtt_options.debug_print = true;
+  setup_mqtt(&mqtt_options);
   isOnline = 1;
 }
 // Do the mqtt stuff:
 void connectedLoop(PubSubClient* client) {
   if (isTime == 1){
-    client->publish("stat/i3/laserZone/bumblebee_timer/laserTubeTime", outputBuffer);
+    sprintf(topicBuf, "stat/%s/laser-tube-time", TOPIC);
+    client->publish(topicBuf, outputBuffer);
   }
-    if (isOnline == 1){
-    client->publish("stat/i3/laserZone/bumblebee_timer/status", "Laser_Timer_Online");
+  if (isOnline == 1){
+    sprintf(topicBuf, "stat/%s/status", TOPIC);
+    client->publish(topicBuf, "Laser_Timer_Online");
   }
   isTime = 0;
   isOnline = 0;
